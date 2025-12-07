@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tictactekber/screens/login_form_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,25 +22,28 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 const SizedBox(height: 60),
                 
-                // Logo Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(40),
                   child: Image.asset(
                     'assets/images/logo.png',
-                    width: 280,
+                    width: 400,
                     fit: BoxFit.contain,
                   ),
                 ),
                 
                 const SizedBox(height: 100),
                 
-                // Login Button
                 SizedBox(
                   width: double.infinity,
                   height: 55,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: Navigate to login page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginFormScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2B5FA7),
@@ -61,7 +65,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 
                 const SizedBox(height: 20),
                 
-                // Sign Up Button
                 SizedBox(
                   width: double.infinity,
                   height: 55,
