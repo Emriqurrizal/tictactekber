@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tictactekber/screens/login_form_screen.dart';
+import 'package:tictactekber/screens/signup_form_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -70,7 +71,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 55,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: Navigate to sign up page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignUpFormScreen(),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF2B5FA7),
