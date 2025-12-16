@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart'; 
-import 'package:tictactekber/firebase_options.dart'; 
-import 'package:tictactekber/screens/login_screen.dart'; 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:tictactekber/firebase_options.dart';
+import 'package:tictactekber/screens/login_screen.dart';
+import 'package:tictactekber/game.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.android,
-  );
-
+void main() {
   runApp(const MyApp());
 }
 
@@ -19,13 +14,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Tic Tac Toe Tekber', 
-      debugShowCheckedModeBanner: false, 
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      home: const LoginScreen(), 
+      debugShowCheckedModeBanner: false,
+
+      // 👇 REQUIRED for web routing
+      initialRoute: '/',
+
+      routes: {
+        '/': (context) => const LoginScreen(),
+        '/game': (context) => const TicTacToeGame(),
+      },
     );
   }
 }
