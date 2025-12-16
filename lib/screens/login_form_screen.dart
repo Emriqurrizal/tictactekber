@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tictactekber/services/auth_service.dart';
+import 'package:tictactekber/screens/game_screen.dart';
 
 class LoginFormScreen extends StatefulWidget {
   const LoginFormScreen({super.key});
@@ -11,12 +13,64 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final AuthService _authService = AuthService();
+  
+  // Loading state
+  bool _isLoading = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  /// Handle Login Logic
+  Future<void> _handleLogin() async {
+    // Step 1: Validate form
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    // Step 2: Start loading
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Step 3: Call AuthService to sign in
+      await _authService.signIn(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Step 4: Navigate to GameScreen on success
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const GameScreen()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      // Step 5: Show error message
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString().replaceAll('Exception: ', '')),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
+    } finally {
+      // Step 6: Stop loading
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -159,13 +213,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                             width: 160,
                             height: 50,
                             child: ElevatedButton(
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  // TODO: Implement login logic
-                                  print('Email: ${_emailController.text}');
-                                  print('Password: ${_passwordController.text}');
-                                }
-                              },
+                              onPressed: _isLoading ? null : _handleLogin,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 foregroundColor: const Color(0xFF2B5FA7),
@@ -173,14 +221,26 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 elevation: 0,
+                                disabledBackgroundColor: Colors.grey[300],
                               ),
-                              child: const Text(
-                                'Login',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          Color(0xFF2B5FA7),
+                                        ),
+                                      ),
+                                    )
+                                  : const Text(
+                                      'Login',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                             ),
                           ),
                         ),

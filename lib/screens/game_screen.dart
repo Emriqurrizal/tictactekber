@@ -12,29 +12,15 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Tic Tac Toe")),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const [
-              SizedBox(height: 8),
-              Text(
-                'Tic Tac Toe',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 12),
-              Card(
-                elevation: 2,
-                child: Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: TicTacToeGame(),
-                ),
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        title: const Text("Tic Tac Toe"),
+        backgroundColor: const Color(0xFF2B5FA7),
+        foregroundColor: Colors.white,
+      ),
+      body: const SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: TicTacToeGame(),
         ),
       ),
     );

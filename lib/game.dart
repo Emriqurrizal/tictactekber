@@ -132,59 +132,49 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-
-      // 🔹 Top bar
-      appBar: AppBar(
-        backgroundColor: Colors.blue.shade400,
-        elevation: 0,
-        title: const Text('Gamepage'),
-      ),
-
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // 🔹 Board container
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade100,
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 9,
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                ),
-                itemBuilder: (_, index) => _buildCell(index),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // 🔹 Board container
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade100,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 9,
+              gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
               ),
+              itemBuilder: (_, index) => _buildCell(index),
             ),
           ),
-        ],
-      ),
-
-      // 🔹 Bottom bar (leaderboard access)
-      bottomNavigationBar: Container(
-        height: 80,
-        decoration: BoxDecoration(
-          color: Colors.blue.shade800,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(24),
+        ),
+        
+        const SizedBox(height: 20),
+        
+        // 🔹 Bottom bar (leaderboard access)
+        Container(
+          width: double.infinity,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.blue.shade800,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: const Center(
+            child: Icon(
+              Icons.emoji_events_outlined,
+              color: Colors.white,
+              size: 36,
+            ),
           ),
         ),
-        child: const Center(
-          child: Icon(
-            Icons.emoji_events_outlined,
-            color: Colors.white,
-            size: 36,
-          ),
-        ),
-      ),
+      ],
     );
   }
 }
