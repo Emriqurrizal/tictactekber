@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 class TicTacToeGame extends StatefulWidget {
@@ -20,32 +21,81 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   ];
 
   List<String> _board = List.filled(9, '');
-  String _currentPlayer = 'X';
-  int _xScore = 0;
-  int _oScore = 0;
+  String _currentPlayer = 'X'; // Player is always X
+  int _playerScore = 0;
   int _draws = 0;
 
   void _makeMove(int index) {
-    if (_board[index].isNotEmpty) return;
+    if (_board[index].isNotEmpty || _currentPlayer != 'X') return;
 
     setState(() {
-      _board[index] = _currentPlayer;
+      _board[index] = 'X';
     });
 
+    _handleGameState();
+
+    // Bot move
+    if (_currentPlayer == 'O') {
+      Future.delayed(const Duration(milliseconds: 400), _botMove);
+    }
+  }
+
+  void _botMove() {
+    final move = _findBestMove();
+    if (move == -1) return;
+
+    setState(() {
+      _board[move] = 'O';
+    });
+
+    _handleGameState();
+  }
+
+  void _handleGameState() {
     final winner = _checkWinner();
     if (winner != null) {
-      if (winner == 'Draw') {
+      if (winner == 'X') {
+        _playerScore++;
+        _showResultDialog('You win!');
+      } else if (winner == 'O') {
+        _showResultDialog('Bot wins!');
+      } else {
         _draws++;
         _showResultDialog('Draw');
-      } else {
-        winner == 'X' ? _xScore++ : _oScore++;
-        _showResultDialog('Player $winner wins!');
       }
     } else {
-      setState(() {
-        _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
-      });
+      _currentPlayer = _currentPlayer == 'X' ? 'O' : 'X';
     }
+  }
+
+  int _findBestMove() {
+    // 1️⃣ Win if possible
+    for (final line in _winningLines) {
+      final move = _checkLine(line, 'O');
+      if (move != -1) return move;
+    }
+
+    // 2️⃣ Block player
+    for (final line in _winningLines) {
+      final move = _checkLine(line, 'X');
+      if (move != -1) return move;
+    }
+
+    // 3️⃣ Random move
+    final empty = <int>[];
+    for (int i = 0; i < 9; i++) {
+      if (_board[i].isEmpty) empty.add(i);
+    }
+    return empty.isEmpty ? -1 : empty[Random().nextInt(empty.length)];
+  }
+
+  int _checkLine(List<int> line, String player) {
+    final values = line.map((i) => _board[i]).toList();
+    if (values.where((v) => v == player).length == 2 &&
+        values.contains('')) {
+      return line[values.indexOf('')];
+    }
+    return -1;
   }
 
   String? _checkWinner() {
@@ -66,22 +116,12 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     });
   }
 
-  void _resetScores() {
-    setState(() {
-      _xScore = 0;
-      _oScore = 0;
-      _draws = 0;
-    });
-  }
-
   Future<void> _showResultDialog(String title) async {
     await showDialog<void>(
       context: context,
       builder: (_) => AlertDialog(
         title: Text(title),
-        content: Text(
-          'Scores\nX: $_xScore   O: $_oScore   Draws: $_draws',
-        ),
+        content: Text('Score: $_playerScore    Draws: $_draws'),
         actions: [
           TextButton(
             onPressed: () {
@@ -89,14 +129,6 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
               _resetBoard();
             },
             child: const Text('Play again'),
-          ),
-          TextButton(
-            onPressed: () {
-              _resetBoard();
-              _resetScores();
-              Navigator.pop(context);
-            },
-            child: const Text('Reset scores'),
           ),
         ],
       ),
@@ -109,10 +141,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       onTap: () => _makeMove(index),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.blue.shade700,
-            width: 1.5,
-          ),
+          border: Border.all(color: Colors.blue.shade700, width: 1.5),
         ),
         child: Center(
           child: Text(
@@ -132,11 +161,12 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // 🔹 Board container
-        Container(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Score: $_playerScore'),
+      ),
+      body: Center(
+        child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.blue.shade100,
@@ -155,26 +185,23 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             ),
           ),
         ),
-        
-        const SizedBox(height: 20),
-        
-        // 🔹 Bottom bar (leaderboard access)
-        Container(
-          width: double.infinity,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.blue.shade800,
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: const Center(
-            child: Icon(
-              Icons.emoji_events_outlined,
-              color: Colors.white,
-              size: 36,
-            ),
+      ),
+      bottomNavigationBar: Container(
+        height: 80,
+        decoration: BoxDecoration(
+          color: Colors.blue.shade800,
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(24),
           ),
         ),
-      ],
+        child: const Center(
+          child: Icon(
+            Icons.emoji_events_outlined,
+            color: Colors.white,
+            size: 36,
+          ),
+        ),
+      ),
     );
   }
 }
