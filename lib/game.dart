@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TicTacToeGame extends StatefulWidget {
   const TicTacToeGame({super.key});
@@ -56,6 +58,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     if (winner != null) {
       if (winner == 'X') {
         _playerScore++;
+        _saveScoreToDatabase();
         _showResultDialog('You win!');
       } else if (winner == 'O') {
         _showResultDialog('Bot wins!');
@@ -121,7 +124,13 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       context: context,
       builder: (_) => AlertDialog(
         title: Text(title),
-        content: Text('Score: $_playerScore    Draws: $_draws'),
+        content: FutureBuilder<int>(
+          future: _getScore(),
+          builder: (context, snapshot) {
+            final score = snapshot.data ?? _playerScore;
+            return Text('Score: $score     Draws: $_draws');
+          },
+        ),
         actions: [
           TextButton(
             onPressed: () {
@@ -163,7 +172,13 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Score: $_playerScore'),
+        title: FutureBuilder<int>(
+          future: _getScore(),
+          builder: (context, snapshot) {
+        final score = snapshot.data ?? _playerScore;
+        return Text('Score: $score');
+          },
+        ),
       ),
       body: Center(
         child: Container(
@@ -204,4 +219,23 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       ),
     );
   }
+  
+  void _saveScoreToDatabase() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('scores').doc(user.uid).set({
+        'score': _playerScore,
+      }, SetOptions(merge: true));
+    }
+  }
+
+  Future<int> _getScore() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance.collection('scores').doc(user.uid).get();
+      return doc.data()?['score'] ?? 0;
+    }
+    return 0;
+  }
+
 }
