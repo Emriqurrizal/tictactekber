@@ -223,17 +223,36 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   void _saveScoreToDatabase() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await FirebaseFirestore.instance.collection('scores').doc(user.uid).set({
-        'score': _playerScore,
-      }, SetOptions(merge: true));
+      try {
+        // Update score in users collection (increment by 1)
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .update({
+          'score': FieldValue.increment(1),
+        });
+        print('Score updated successfully for user: ${user.uid}');
+      } catch (e) {
+        print('Error updating score: $e');
+      }
     }
   }
 
   Future<int> _getScore() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      final doc = await FirebaseFirestore.instance.collection('scores').doc(user.uid).get();
-      return doc.data()?['score'] ?? 0;
+      try {
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+        final score = doc.data()?['score'] ?? 0;
+        print('Retrieved score: $score for user: ${user.uid}');
+        return score;
+      } catch (e) {
+        print('Error getting score: $e');
+        return 0;
+      }
     }
     return 0;
   }
