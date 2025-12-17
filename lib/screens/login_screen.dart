@@ -95,14 +95,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/game');
-                  },
-                  child: const Text('Start Game'),
-                ),
-                
                 const SizedBox(height: 60),
               ],
             ),

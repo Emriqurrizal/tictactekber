@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tictactekber/firebase_options.dart';
+import 'package:tictactekber/screens/leaderboard_screen.dart';
 import 'package:tictactekber/screens/login_screen.dart';
 import 'package:tictactekber/game.dart';
 
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const LoginScreen(),
         '/game': (context) => const TicTacToeGame(),
+        '/leaderboard': (context) => const LeaderboardScreen(),
       },
     );
   }

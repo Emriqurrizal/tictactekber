@@ -208,15 +208,21 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      // Header
       appBar: AppBar(
-        title: FutureBuilder<int>(
-          future: _getScore(),
-          builder: (context, snapshot) {
-        final score = snapshot.data ?? _playerScore;
-        return Text('Score: $score');
-          },
+        backgroundColor: Colors.blue.shade400,
+        elevation: 0,
+        title: const Text(
+          'TicTacToe',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          )
         ),
+        centerTitle: true,
       ),
+
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -238,6 +244,8 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
           ),
         ),
       ),
+
+      // Footer
       bottomNavigationBar: Container(
         height: 80,
         decoration: BoxDecoration(
@@ -246,11 +254,18 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             top: Radius.circular(24),
           ),
         ),
-        child: const Center(
-          child: Icon(
-            Icons.emoji_events_outlined,
-            color: Colors.white,
-            size: 36,
+        child: Center(
+          child: ElevatedButton(
+            onPressed: () { Navigator.pushNamed(context, '/leaderboard'); },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue.shade800,
+              shadowColor: Colors.transparent,
+            ),
+            child: const Icon(
+              Icons.emoji_events_outlined,
+              color: Colors.white,
+              size: 36,
+            )
           ),
         ),
       ),
