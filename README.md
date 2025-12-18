@@ -1,16 +1,56 @@
-# tictactoe
+# TicTacTekber
 
-A new Flutter project.
+## Description
+TicTacTekber is a Flutter-based mobile application integrated with Firebase. The application allows users to log in and play a game against a bot, where the user’s score is stored and accumulated in Firebase.
 
-## Getting Started
+Firebase is used for:
+- User authentication
+- Storing user scores
+- Real-time leaderboard updates
 
-This project is a starting point for a Flutter application.
+The project supports Android, iOS, Web, Windows, macOS, and Linux, following Flutter’s multi-platform architecture
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+## Technologies Used
+
+- Flutter (Dart)
+- Firebase Authentication
+- Firebase Firestore / Realtime Database
+- Firebase Hosting (Web)
+- Material UI
+
+## Installation
+
+Clone the repository
+```bash
+git clone https://github.com/Emriqurrizal/tictactekber
+```
+Go to the project directory
+```bash
+cd [your-project-directory]
+```
+Install Flutter dependencies
+```bash
+flutter pub get
+```
+Run the application
+```bash
+flutter run
+```
+For web:
+```bash
+flutter run -d chrome
+```
+
+    
+## Screenshots
+
+![Sign Up Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Login Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Game Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Leaderboard Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![Profile Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+
