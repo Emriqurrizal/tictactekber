@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tictactekber/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class LeaderboardScreen extends StatelessWidget {
-  const LeaderboardScreen({super.key});
+  LeaderboardScreen({super.key});
+
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -11,19 +14,23 @@ class LeaderboardScreen extends StatelessWidget {
 
       // Header
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade400,
-        elevation: 0,
-        title: const Text(
-          'Leaderboard',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          )
-
-        ),
-        centerTitle: true,
+        title: const Text('Leaderboard'),
+        backgroundColor: const Color(0xFF2B5FA7),
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle, size: 32, color: Colors.white,),
+            onPressed: null,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Text(
+              _authService.currentUser?.displayName ?? 'Guest',
+              style: TextStyle(fontSize: 16, color: Colors.white),
+            ),
+          ),
+        ],
       ),
-
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
@@ -151,7 +158,7 @@ class LeaderboardScreen extends StatelessWidget {
         ),
         child: Center(
           child: ElevatedButton(
-            onPressed: () { Navigator.pushNamed(context, '/game'); },
+            onPressed: () { Navigator.pushNamed(context, '/game_screen'); },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue.shade800,
               shadowColor: Colors.transparent,
@@ -167,3 +174,4 @@ class LeaderboardScreen extends StatelessWidget {
     );
   }
 }
+
