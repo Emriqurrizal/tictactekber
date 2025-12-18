@@ -14,6 +14,15 @@ The project supports Android, iOS, Web, Windows, macOS, and Linux, following Flu
 
 
 
+## Group Members
+
+| Name                           | Student Number 
+| :--------                      | :------- 
+| Emriqurrizal Yahya Nurramadhan | 5026231001
+| Alexander Allan                | 5026231050 
+
+
+
 ## Technologies Used
 
 - Flutter (Dart)
@@ -46,6 +55,31 @@ flutter run -d chrome
 ```
 
     
+## Firebase Setup
+
+1. Create a Firebase project at `https://console.firebase.google.com`
+
+2. Add your app to Firebase 
+- Android: `android/app/google-services.json`
+- iOS: `ios/Runner/GoogleService-Info.plist`
+- Web: `Firebase config inside web/index.html`
+
+3. Enable required services:
+- Authentication (Email/Password)
+- Firestore Database (or Realtime Database)
+
+4. Example Firestore Structure:
+```bash
+users
+ |--- userId
+     |--- username: "player1"
+     |--- score: 120
+```
+5. Run Firebase locally 
+```bash
+firebase init
+firebase serve
+```
 ## Screenshots
 
 ![Sign Up Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
