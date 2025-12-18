@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tictactekber/firebase_options.dart';
+import 'package:tictactekber/screens/game_screen.dart';
 import 'package:tictactekber/screens/leaderboard_screen.dart';
 import 'package:tictactekber/screens/login_screen.dart';
-import 'package:tictactekber/game.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
 
       routes: {
         '/': (context) => const LoginScreen(),
-        '/game': (context) => const TicTacToeGame(),
+        '/game': (context) => GameScreen(),
         '/leaderboard': (context) => const LeaderboardScreen(),
       },
     );

@@ -8,10 +8,10 @@ class TicTacToeGame extends StatefulWidget {
   const TicTacToeGame({super.key});
 
   @override
-  State<TicTacToeGame> createState() => _TicTacToeGameState();
+  State<TicTacToeGame> createState() => TicTacToeGameState();
 }
 
-class _TicTacToeGameState extends State<TicTacToeGame> {
+class TicTacToeGameState extends State<TicTacToeGame> {
   static const List<List<int>> _winningLines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -47,7 +47,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     }
   }
 
-  Future<int> _getScore() async {
+  Future<int> getScore() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
@@ -111,19 +111,19 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
   }
 
   int _findBestMove() {
-    // 1️⃣ Win if possible
+    // Win if possible
     for (final line in _winningLines) {
       final move = _checkLine(line, 'O');
       if (move != -1) return move;
     }
 
-    // 2️⃣ Block player
+    // Block player
     for (final line in _winningLines) {
       final move = _checkLine(line, 'X');
       if (move != -1) return move;
     }
 
-    // 3️⃣ Random move
+    // Random move
     final empty = <int>[];
     for (int i = 0; i < 9; i++) {
       if (_board[i].isEmpty) empty.add(i);
@@ -164,7 +164,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
       builder: (_) => AlertDialog(
         title: Text(title),
         content: FutureBuilder<int>(
-          future: _getScore(),
+          future: getScore(),
           builder: (context, snapshot) {
             final score = snapshot.data ?? _playerScore;
             return Text('Score: $score     Draws: $_draws');
@@ -207,69 +207,9 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     );
   }
 
-  Future<void> _handleLogout() async {
-    try {
-      await _authService.signOut();
-      if (mounted) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          '/',
-          (route) => false,
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Logout failed: $e')),
-        );
-      }
-    }
-  }
-
-  void _showProfileMenu() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
-              title: const Text(
-                'Logout',
-                style: TextStyle(color: Colors.red),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                _handleLogout();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      // Header
-      appBar: AppBar(
-        backgroundColor: Colors.blue.shade400,
-        elevation: 0,
-        title: const Text(
-          'TicTacToe',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          )
-        ),
-        centerTitle: true,
-      ),
 
       body: Center(
         child: Container(
@@ -290,47 +230,6 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
               itemBuilder: (_, index) => _buildCell(index),
             ),
           ),
-        ),
-      ),
-
-      // Footer
-      bottomNavigationBar: Container(
-        height: 80,
-        decoration: BoxDecoration(
-          color: Colors.blue.shade800,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(24),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () { Navigator.pushNamed(context, '/leaderboard'); },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade800,
-                shadowColor: Colors.transparent,
-              ),
-              child: const Icon(
-                Icons.emoji_events_outlined,
-                color: Colors.white,
-                size: 36,
-              )
-            ),
-            const SizedBox(width: 20),
-            ElevatedButton(
-              onPressed: _showProfileMenu,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade800,
-                shadowColor: Colors.transparent,
-              ),
-              child: const Icon(
-                Icons.account_circle,
-                color: Colors.white,
-                size: 36,
-              )
-            ),
-          ],
         ),
       ),
     );
