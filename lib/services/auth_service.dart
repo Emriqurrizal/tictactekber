@@ -54,17 +54,35 @@ class AuthService {
     }
   }
 
-  /// Sign Up Function (CRUCIAL STEP)
-  /// Input: email, password, and username
-  /// Process A: Create Firebase Auth account
-  /// Process B: Create Firestore document with user data
+  /// Check if username already exists
+  Future<bool> isUsernameAvailable(String username) async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .limit(1)
+          .get();
+      
+      return querySnapshot.docs.isEmpty; // true if available
+    } catch (e) {
+      throw Exception('Failed to check username: $e');
+    }
+  }
+
+  /// Sign Up Function
   Future<User?> signUp({
     required String email,
     required String password,
     required String username,
   }) async {
+    // Check if username is already taken FIRST
+    final isAvailable = await isUsernameAvailable(username);
+    if (!isAvailable) {
+      throw Exception('Username "$username" is already taken. Please choose another one.');
+    }
+
     try {
-      // Process A: Create authentication account
+      //Create authentication account
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -73,7 +91,6 @@ class AuthService {
       User? user = result.user;
 
       if (user != null) {
-        // Process B: CRUCIAL - Create Firestore document immediately
         // This stores the user's game data (username, score, etc.)
         await _firestore.collection('users').doc(user.uid).set({
           'uid': user.uid,
@@ -108,8 +125,6 @@ class AuthService {
           errorMessage = 'Sign up failed: ${e.message}';
       }
       throw Exception(errorMessage);
-    } catch (e) {
-      throw Exception('An unexpected error occurred: $e');
     }
   }
 
@@ -135,7 +150,7 @@ class AuthService {
     }
   }
 
-  /// Update user score (will be used when player wins a game)
+  /// Update user score
   Future<void> incrementScore(String uid) async {
     try {
       await _firestore.collection('users').doc(uid).update({

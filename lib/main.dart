@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      // 👇 REQUIRED for web routing
       initialRoute: '/',
 
       routes: {

@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tictactekber/services/auth_service.dart';
 
 class TicTacToeGame extends StatefulWidget {
   const TicTacToeGame({super.key});
@@ -22,6 +23,7 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     [2, 4, 6],
   ];
 
+  final AuthService _authService = AuthService();
   List<String> _board = List.filled(9, '');
   String _currentPlayer = 'X'; // Player is always X
   int _playerScore = 0;
@@ -205,6 +207,52 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
     );
   }
 
+  Future<void> _handleLogout() async {
+    try {
+      await _authService.signOut();
+      if (mounted) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/',
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Logout failed: $e')),
+        );
+      }
+    }
+  }
+
+  void _showProfileMenu() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.red),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                _handleLogout();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -254,19 +302,35 @@ class _TicTacToeGameState extends State<TicTacToeGame> {
             top: Radius.circular(24),
           ),
         ),
-        child: Center(
-          child: ElevatedButton(
-            onPressed: () { Navigator.pushNamed(context, '/leaderboard'); },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade800,
-              shadowColor: Colors.transparent,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () { Navigator.pushNamed(context, '/leaderboard'); },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade800,
+                shadowColor: Colors.transparent,
+              ),
+              child: const Icon(
+                Icons.emoji_events_outlined,
+                color: Colors.white,
+                size: 36,
+              )
             ),
-            child: const Icon(
-              Icons.emoji_events_outlined,
-              color: Colors.white,
-              size: 36,
-            )
-          ),
+            const SizedBox(width: 20),
+            ElevatedButton(
+              onPressed: _showProfileMenu,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue.shade800,
+                shadowColor: Colors.transparent,
+              ),
+              child: const Icon(
+                Icons.account_circle,
+                color: Colors.white,
+                size: 36,
+              )
+            ),
+          ],
         ),
       ),
     );
