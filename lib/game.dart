@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tictactekber/services/auth_service.dart';
+// import 'package:tictactekber/services/auth_service.dart';
 
 class TicTacToeGame extends StatefulWidget {
   const TicTacToeGame({super.key});
@@ -23,7 +23,7 @@ class TicTacToeGameState extends State<TicTacToeGame> {
     [2, 4, 6],
   ];
 
-  final AuthService _authService = AuthService();
+  // final AuthService _authService = AuthService();
   List<String> _board = List.filled(9, '');
   String _currentPlayer = 'X'; // Player is always X
   int _playerScore = 0;

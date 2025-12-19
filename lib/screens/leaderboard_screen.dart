@@ -1,11 +1,58 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tictactekber/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:tictactekber/services/auth_service.dart';
 
-class LeaderboardScreen extends StatelessWidget {
-  LeaderboardScreen({super.key});
+class LeaderBoardScreen extends StatefulWidget {
+  const LeaderBoardScreen({super.key});
 
+  @override
+  State<LeaderBoardScreen> createState() => _LeaderBoardScreenState();
+}
+
+class _LeaderBoardScreenState extends State<LeaderBoardScreen> {
   final AuthService _authService = AuthService();
+
+  Future<void> _handleLogout() async {
+    try {
+      await _authService.signOut();
+
+      if (!mounted) return;
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/',
+        (route) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Logout failed: $e')),
+      );
+    }
+  }
+
+  void _showLogoutSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => Padding(
+        padding: const EdgeInsets.all(20),
+        child: ListTile(
+          leading: const Icon(Icons.logout, color: Colors.red),
+          title: const Text(
+            'Logout',
+            style: TextStyle(color: Colors.red),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            _handleLogout();
+          },
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +66,8 @@ class LeaderboardScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle, size: 32, color: Colors.white,),
-            onPressed: null,
+            icon: const Icon(Icons.account_circle, size: 32, color: Colors.white),
+            onPressed: _showLogoutSheet,
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16),
@@ -174,4 +221,3 @@ class LeaderboardScreen extends StatelessWidget {
     );
   }
 }
-

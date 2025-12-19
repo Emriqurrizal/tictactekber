@@ -60,7 +60,6 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
 
-
       // Header
       appBar: AppBar(
         title: const Text('Tic Tac Toe'),
@@ -86,7 +85,6 @@ class _GameScreenState extends State<GameScreen> {
           child: TicTacToeGame(),
         ),
       ),
-
 
       // Footer
       bottomNavigationBar: Container(
