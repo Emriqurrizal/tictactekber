@@ -81,10 +81,14 @@ firebase init
 firebase serve
 ```
 ## Screenshots
-
-![Sign Up Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-![Login Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-![Game Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-![Leaderboard Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-![Profile Page](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+- Sign Up Page
+- ![Sign Up Page](screenshots/signup.png)
+- Login Page
+- ![Login Page](screenshots/login.png)
+- Game Page
+- ![Game Page](screenshots/game.png)
+- Leaderboard Page
+- ![Leaderboard Page](screenshots/leaderboard.png)
+- Home Page
+- ![Home Page](screenshots/home.png)
 
